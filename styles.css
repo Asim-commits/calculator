@@ -1,3 +1,73 @@
 body {
     background-color: orange;
+    margin: 0; 
+    padding: 0;
+}
+
+.flex-container {
+    display: flex; 
+    flex-direction: column;
+    border: 2px solid black;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.display {
+    border: 2px solid red;
+    display: flex;
+    width: 300px;
+    height: 50px;
+    margin: auto;
+    flex-grow: 1;
+}
+
+.buttons {
+    border: 2px solid green;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+button {
+    font-size: 20px;
+    border-radius: 30px;
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+    margin: 10px 2px;
+    background-color: #ffbf00;
+}
+
+.long-buttons {
+    background-color: #ff1dce;
+    width: 90px;
+}
+
+button.operator {
+    background-color: #987654;
+}
+
+button:hover {
+    background-color: #add8e6;
+    color: #ff9999;
+}
+
+button.operator:hover {
+    background-color: #8db600;
+}
+
+button.clear:hover {
+    background-color: #ff0800;
+}
+
+button.equal {
+    background-color: #fff000;
+}
+
+button.equal:hover {
+    background-color: #8db600;
 }
