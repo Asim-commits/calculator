@@ -5,3 +5,6 @@ Checklist:
 a) Should perform basic and some additional mathematical operations. 
 b) Don't procrastinate too much on making the calculator beautiful. It should look just fine. 
 c) Add colors to different buttons. 
+
+Fixes:
+The button looks pixelated and outdated. Fix it.
