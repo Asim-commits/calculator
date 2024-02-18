@@ -4,15 +4,19 @@ const equal = document.querySelector('.equal');
 const allClear = document.querySelector('.clearAll');
 const singleClear = document.querySelector('.clearSingle');
 const display = document.querySelector('.display');
+
+
 let checkError = 0;
 let noFirstNumberError = 0;
 let operator = '';
+let combinedStr = '';
 let firstNumber = '';
 let secondNumber = '';
+let number = '';
 let result = '';
 let arr = [];
 let arrOfOperators = [];
-
+let operatorsToBeDeleted = [];
 
 function add(num1, num2) {
     return (num1 + num2);
@@ -94,9 +98,10 @@ function getResult(operator) {
 for (let i = 0; i < operationButtons.length; i++) {
     operationButtons[i].addEventListener( 'click', (event) => {
         operator = event.target.name;
-
         arrOfOperators.push(operator);
-        // console.log(arrOfOperators);
+        operatorsToBeDeleted.push(operator); // Required for del operation
+        console.log("Array of operators:", arrOfOperators);
+        console.log("Each indexes are: ");
         console.log(arrOfOperators[0]);
         console.log(arrOfOperators[1]);
 
@@ -105,13 +110,7 @@ for (let i = 0; i < operationButtons.length; i++) {
             return;
         }
 
-        if (arrOfOperators[1] != undefined && secondNumber == '') {
-            checkError++;
-            arrOfOperators.pop();
-            return undefined;
-        }
-
-        if (firstNumber == '') {
+        if (typeof(firstNumber) == 'undefined') {
             return;
         }
 
@@ -131,7 +130,7 @@ for (let i = 0; i < operationButtons.length; i++) {
         arrOfOperators.splice(0, 1);
 
         
-        console.log("First Number and second Number in operationButton :", firstNumber, secondNumber);
+        console.log("First Number and second Number in operation button:", firstNumber, secondNumber);
     })
 }
 
@@ -146,25 +145,39 @@ for (let i = 0; i < numbers.length; i++) {
         }
 
         // Checks if user has defined an operator first and then a number.
-        if (firstNumber == '' && arrOfOperators[0] != undefined) {
-            console.log("Inside another pesky error block");
+        if (typeof(firstNumber) == 'undefined' && typeof(arrOfOperators[0]) != 'undefined') {
+            console.log("Array of operators: ", arrOfOperators)
             noFirstNumberError++;
+            console.log("inside this block");
             return;
         }
 
         if (checkSecondNumber()) {
             secondNumber += number;
             display.textContent = secondNumber;
+            console.log("second number is present");
         }
 
-        if (checkError > 0) {
-            console.log("Inside button error");
+        // Show an error if user inputs multiple operators.
+        if (arrOfOperators[1] != undefined) {
+            console.log("1: ", typeof(arrOfOperators[1]));
+            console.log("2: ", typeof(secondNumber));
+            console.log(arrOfOperators[1]);
+            console.log(secondNumber);
+            console.log("Second Number: ", secondNumber);
+            // checkError++;
             displayErrorMessage();
-            return;
+            return undefined;
         }
-        
-        console.log("First Number: " + firstNumber);
-        console.log("Second Number: " + secondNumber);
+
+        // if (checkError > 0) {
+        //     displayErrorMessage();
+        //     console.log("this displayed error");
+        //     return;
+        // }
+
+        console.log("First Number: ", firstNumber);
+        console.log("Second Number: ", secondNumber);
     })
 }
 
@@ -192,7 +205,37 @@ equal.addEventListener( 'click', () => {
     /* arrOfOperators is used instead of operator variable. Let's say we have to calculate 12+5-7*3. Operator variable stores
     previous operator used. arrOfOperator uses latest operator. When we press =, we want latest operator not previous operator. */
     firstNumber = result;
-    console.log(result);
+    secondNumber = '';
+    arrOfOperators.pop();
+    console.log("First Number in equal operator: ", firstNumber); 
+    console.log("Second Number in equal operator: :", secondNumber);
+});
+
+singleClear.addEventListener( 'click', () => {
+    console.log("All operators : ", operatorsToBeDeleted);
+    if (firstNumber != '' && secondNumber == '' && operator == '') {
+        console.log("Cursor is at first number");
+        let newStr = firstNumber.slice(0, firstNumber.length - 1);
+        firstNumber = newStr;
+        display.textContent = firstNumber;
+    }
+
+    if (firstNumber != '' && operator != '' && secondNumber == '') {
+        console.log("Cursor is at operator");
+        arrOfOperators.pop();
+        // operator = operatorsToBeDeleted;
+    }
+
+    if (firstNumber != '' && operator != '' && secondNumber != '') {
+        console.log("Cursor is at second number");
+        let newStr = secondNumber.slice(0, secondNumber.length - 1);
+        secondNumber = newStr;
+        display.textContent = secondNumber;
+    }
+    console.log("First number: " + firstNumber);
+    console.log("Second Number: " + secondNumber);
+    console.log("Operator: " + operator);
+    console.log("Array of operators: ", arrOfOperators);
 });
 
 allClear.addEventListener( 'click', () => {
