@@ -2,8 +2,10 @@ const operationButtons = document.querySelectorAll('.operator');
 const numbers = document.querySelectorAll('.numbers');
 const equal = document.querySelector('.equal');
 const allClear = document.querySelector('.clearAll');
+const singleClear = document.querySelector('.clearSingle');
 const display = document.querySelector('.display');
 let checkError = 0;
+let noFirstNumberError = 0;
 let operator = '';
 let firstNumber = '';
 let secondNumber = '';
@@ -31,11 +33,17 @@ function divide(num1, num2) {
     return (num1 / num2);
 }
 
+function power(num1, num2) {
+    return Math.pow(num1, num2);
+}
+
 function clearNumber() {
     firstNumber = '';
     secondNumber = '';
     operator = '';
     arrOfOperators = [];
+    checkError = 0;
+    noFirstNumberError = 0;
 }
 
 function operate(num1, operator, num2) {
@@ -79,7 +87,7 @@ function getResult(operator) {
     } else if (operator == '/') {
         return divide(Number(firstNumber), Number(secondNumber));
     } else {
-        return 0;
+        return power(Number(firstNumber), Number(secondNumber));
     }
 }
 
@@ -88,17 +96,20 @@ for (let i = 0; i < operationButtons.length; i++) {
         operator = event.target.name;
 
         arrOfOperators.push(operator);
-        console.log(arrOfOperators);
+        // console.log(arrOfOperators);
+        console.log(arrOfOperators[0]);
         console.log(arrOfOperators[1]);
+
+        if (noFirstNumberError > 0) {
+            displayErrorMessage();
+            return;
+        }
 
         if (arrOfOperators[1] != undefined && secondNumber == '') {
             checkError++;
-            console.log(checkError);
-            console.log("Inside this pesky block");
             arrOfOperators.pop();
             return undefined;
         }
-        console.log("Array of operators: ", arrOfOperators);
 
         if (firstNumber == '') {
             return;
@@ -112,6 +123,8 @@ for (let i = 0; i < operationButtons.length; i++) {
         operator = arrOfOperators[0];
 
         result = getResult(operator);
+
+        display.textContent = result;
         
         firstNumber = result; 
         secondNumber = '';
@@ -132,9 +145,22 @@ for (let i = 0; i < numbers.length; i++) {
             display.textContent = firstNumber;
         }
 
+        // Checks if user has defined an operator first and then a number.
+        if (firstNumber == '' && arrOfOperators[0] != undefined) {
+            console.log("Inside another pesky error block");
+            noFirstNumberError++;
+            return;
+        }
+
         if (checkSecondNumber()) {
             secondNumber += number;
             display.textContent = secondNumber;
+        }
+
+        if (checkError > 0) {
+            console.log("Inside button error");
+            displayErrorMessage();
+            return;
         }
         
         console.log("First Number: " + firstNumber);
@@ -150,8 +176,9 @@ equal.addEventListener( 'click', () => {
         return;
     }
 
-    if (operator != '' && secondNumber =='') {
-        display.textContent = "ERROR";
+    if (operator != '' && secondNumber == '') {
+        // display.textContent = "ERROR";
+        displayErrorMessage();
         return;
     }
 
@@ -159,11 +186,12 @@ equal.addEventListener( 'click', () => {
         displayErrorMessage();
         return;
     }
+
     result = getResult(arrOfOperators);
     display.textContent = result;
     /* arrOfOperators is used instead of operator variable. Let's say we have to calculate 12+5-7*3. Operator variable stores
     previous operator used. arrOfOperator uses latest operator. When we press =, we want latest operator not previous operator. */
-    clearNumber();
+    firstNumber = result;
     console.log(result);
 });
 
