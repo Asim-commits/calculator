@@ -4,19 +4,20 @@ const equal = document.querySelector('.equal');
 const allClear = document.querySelector('.clearAll');
 const singleClear = document.querySelector('.clearSingle');
 const display = document.querySelector('.display');
+const decimalButton = document.querySelector('.decimal');
 
 
 let checkError = 0;
 let noFirstNumberError = 0;
 let operator = '';
-let combinedStr = '';
 let firstNumber = '';
 let secondNumber = '';
 let number = '';
 let result = '';
-let arr = [];
 let arrOfOperators = [];
 let operatorsToBeDeleted = [];
+let countDecimal = 0;
+let count = 0;
 
 function add(num1, num2) {
     return (num1 + num2);
@@ -34,6 +35,12 @@ function divide(num1, num2) {
     if (num2 == 0) {
         return "undefined";
     }
+    let division = num1 / num2; 
+    let newArr = division.toString().split(".");
+    let lengthOfArr = newArr[1].length;
+    if (lengthOfArr > 5) {
+        return (num1 / num2).toFixed(5);
+    }
     return (num1 / num2);
 }
 
@@ -48,6 +55,8 @@ function clearNumber() {
     arrOfOperators = [];
     checkError = 0;
     noFirstNumberError = 0;
+    countDecimal = 0;
+    display.textContent = '';
 }
 
 function operate(num1, operator, num2) {
@@ -73,6 +82,10 @@ function displayErrorMessage() {
 /* Instead of adding a single event listener to all the buttons, add event listener based on the functions of the button. 
     For example: +, -, *, / & ^ are operators and they can be added to a single event listener.
 */
+
+
+// By default, if the user presses the operator and enter any number then firstNumber will be 0 and secondNumber will be 
+// the number that the user pressed. This behavior can be changed by modifying this function.
 
 function checkSecondNumber() {
     if (operator == '') {
@@ -134,11 +147,32 @@ for (let i = 0; i < operationButtons.length; i++) {
     })
 }
 
+decimalButton.addEventListener( 'click', (event) => {
+    countDecimal++;
+    
+    if (countDecimal == 1) {
+        firstNumber += '.';
+        display.textContent = firstNumber;
+    }
+
+    if (count == 1) {
+        return;
+    }
+
+    if (typeof(firstNumber) != 'undefined' && operator != '') {
+        secondNumber += '.';
+        display.textContent = secondNumber;
+        count++;
+    }
+});
+
 
 for (let i = 0; i < numbers.length; i++) {
     numbers[i].addEventListener ( 'click', (event) => {
         number = event.target.name;
-        
+
+        console.log(countDecimal);
+
         if (secondNumber == '' && operator == '') {
             firstNumber += number;
             display.textContent = firstNumber;
@@ -206,7 +240,7 @@ equal.addEventListener( 'click', () => {
     previous operator used. arrOfOperator uses latest operator. When we press =, we want latest operator not previous operator. */
     firstNumber = result;
     secondNumber = '';
-    arrOfOperators.pop();
+    arrOfOperators.pop(); 
     console.log("First Number in equal operator: ", firstNumber); 
     console.log("Second Number in equal operator: :", secondNumber);
 });
